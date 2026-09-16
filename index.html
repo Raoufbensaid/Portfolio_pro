@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07090f" />
+    <meta name="description" content="Portfolio de Raouf Bsd — Développeur Full Stack & Data, Mastère Expert IT." />
+    <title>Raouf Bsd — Full Stack & Data</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="noise" aria-hidden="true"></div>
+      <div class="cursor-glow" aria-hidden="true"></div>
+
+      <header class="site-header" id="top">
+        <a class="brand" href="#top" aria-label="Raouf Bsd — accueil">
+          <span class="brand-mark">&lt;/&gt;</span>
+          <span>RAOUF<span class="accent">.</span>BSD</span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Navigation principale">
+          <a href="#about">À propos</a>
+          <a href="#projects">Projets</a>
+          <a href="#skills">Compétences</a>
+          <a href="#experience">Expérience</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <a class="header-cta" href="/CV_Raouf_Bensaid.pdf" download="CV_Raouf_Bensaid.pdf">Télécharger CV ↓</a>
+        <button class="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+          <span></span><span></span>
+        </button>
+      </header>
+
+      <main>
+        <section class="hero section" aria-labelledby="hero-title">
+          <canvas id="hero-canvas" aria-hidden="true"></canvas>
+          <div class="hero-grid" aria-hidden="true"></div>
+
+          <div class="hero-content">
+            <div class="eyebrow reveal"><span class="eyebrow-line"></span> FULL STACK × DATA</div>
+            <h1 id="hero-title" class="hero-title">
+              Je transforme<br />
+              <span class="gradient-text">les données</span> en<br />
+              <span class="outline-text">expériences.</span>
+            </h1>
+            <p class="hero-copy reveal">
+              Développeur Full Stack & Data, je conçois des produits web et mobiles
+              utiles, performants et pilotés par la donnée.
+            </p>
+            <div class="hero-actions reveal">
+              <a class="btn btn-primary" href="#projects">Voir mes projets <span>↗</span></a>
+              <a class="btn btn-ghost" href="#contact">Me contacter</a>
+              <a class="btn btn-ghost" href="/CV_Raouf_Bensaid.pdf" download="CV_Raouf_Bensaid.pdf">CV PDF ↓</a>
+            </div>
+            <div class="hero-meta reveal">
+              <span>📍 Île-de-France, France</span>
+              <span class="meta-separator"></span>
+              <span>Recherche CDI</span>
+            </div>
+          </div>
+
+          <div class="hero-orbit-label label-a" aria-hidden="true">REACT</div>
+          <div class="hero-orbit-label label-b" aria-hidden="true">PYTHON</div>
+          <div class="hero-orbit-label label-c" aria-hidden="true">NODE.JS</div>
+
+          <a class="scroll-cue" href="#about" aria-label="Défiler vers la section À propos">
+            <span>SCROLL</span><span class="scroll-arrow">↓</span>
+          </a>
+        </section>
+
+        <section class="marquee-band" aria-label="Technologies">
+          <div class="marquee-track">
+            <span>JAVASCRIPT</span><i>✦</i><span>TYPESCRIPT</span><i>✦</i><span>REACT</span><i>✦</i>
+            <span>NODE.JS</span><i>✦</i><span>PYTHON</span><i>✦</i><span>DATA</span><i>✦</i>
+            <span>SQL</span><i>✦</i><span>MONGODB</span><i>✦</i><span>BIG DATA</span><i>✦</i>
+            <span>JAVASCRIPT</span><i>✦</i><span>TYPESCRIPT</span><i>✦</i><span>REACT</span><i>✦</i>
+            <span>NODE.JS</span><i>✦</i><span>PYTHON</span><i>✦</i><span>DATA</span><i>✦</i>
+          </div>
+        </section>
+
+        <section class="section about" id="about" aria-labelledby="about-title">
+          <div class="section-heading reveal">
+            <span class="section-number">01</span>
+            <div>
+              <p class="section-kicker">PROFIL</p>
+              <h2 id="about-title">Un profil hybride,<br /><span class="muted">entre code & data.</span></h2>
+            </div>
+          </div>
+
+          <div class="about-grid">
+            <div class="about-visual reveal">
+              <div class="portrait-card">
+                <div class="portrait-placeholder">
+                  <img src="/raouf.png" alt="Portrait illustré de Raouf Bensaid" class="profile-photo" />
+                  <div class="portrait-scan"></div>
+                  <div class="portrait-corner tl"></div>
+                  <div class="portrait-corner br"></div>
+                </div>
+                <div class="portrait-caption">
+                  <span>DEV / DATA</span>
+                  <span>FR — 95</span>
+                </div>
+              </div>
+              <div class="floating-chip chip-one">Bac+5</div>
+              <div class="floating-chip chip-two">Mastère Expert IT</div>
+            </div>
+
+            <div class="about-copy reveal">
+              <p class="lead">
+                Passionné par les technologies web et l’analyse de données, je développe
+                des solutions de bout en bout : interface, API, données, automatisation
+                et visualisation.
+              </p>
+              <p>
+                Mon parcours combine développement full stack, applications mobiles,
+                conception de bases de données et analyse de performance. Je recherche
+                un CDI en développement full stack ou data analytics, avec l’envie
+                d’évoluer vers des problématiques de data engineering.
+              </p>
+
+              <div class="badge-cloud" aria-label="Principales compétences">
+                <span>JavaScript</span><span>TypeScript</span><span>React</span><span>Angular</span>
+                <span>Node.js</span><span>Python</span><span>FastAPI</span><span>SQL</span>
+                <span>MongoDB</span><span>Power BI</span><span>Docker</span><span>WebSocket</span>
+              </div>
+
+              <div class="about-facts">
+                <div><strong>2024–26</strong><span>Full Stack & Data<br />Flying For You</span></div>
+                <div><strong>2023</strong><span>Full Stack<br />SNCF DGA numérique</span></div>
+                <div><strong>Bac+5</strong><span>Expert IT — Dév. & Big Data<br />IRIS</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section projects" id="projects" aria-labelledby="projects-title">
+          <div class="section-heading reveal">
+            <span class="section-number">02</span>
+            <div>
+              <p class="section-kicker">SELECTED WORK</p>
+              <h2 id="projects-title">Des projets qui<br /><span class="muted">résolvent des problèmes.</span></h2>
+            </div>
+          </div>
+
+          <div class="projects-grid">
+            <article class="project-card project-featured reveal tilt-card" data-project="deliverconnect">
+              <div class="project-top">
+                <span class="project-index">01 / 02</span>
+                <span class="project-type">FULL STACK · MOBILE · DATA</span>
+              </div>
+              <div class="project-art delivery-art" aria-hidden="true">
+                <div class="map-lines"></div>
+                <div class="route route-1"></div>
+                <div class="route route-2"></div>
+                <div class="pin pin-a">A</div>
+                <div class="pin pin-b">B</div>
+                <div class="delivery-panel">
+                  <span>LIVE TRACKING</span><strong>98.4%</strong><small>signal</small>
+                </div>
+              </div>
+              <div class="project-content">
+                <h3>DeliverConnect</h3>
+                <p>
+                  Marketplace de livraison collaborative avec tracking GPS temps réel,
+                  chat, paiement, tarification kilométrique et dashboard KPI.
+                </p>
+                <div class="tech-list"><span>React Native</span><span>Node.js</span><span>MongoDB</span><span>Socket.io</span><span>Stripe</span></div>
+                <div class="project-links">
+                  <a href="https://github.com/Raoufbensaid" target="_blank" rel="noreferrer">GitHub ↗</a>
+                  <button class="case-btn" data-open-project="deliverconnect">Voir le case study →</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card reveal tilt-card" data-project="sales">
+              <div class="project-top">
+                <span class="project-index">02 / 02</span>
+                <span class="project-type">DATA ANALYTICS</span>
+              </div>
+              <div class="project-art analytics-art" aria-hidden="true">
+                <div class="bars"><i style="--h:35%"></i><i style="--h:52%"></i><i style="--h:44%"></i><i style="--h:78%"></i><i style="--h:62%"></i><i style="--h:92%"></i><i style="--h:70%"></i></div>
+                <div class="chart-line"></div>
+                <div class="metric-card"><small>CA MENSUEL</small><strong>+24.8%</strong><span>↗ croissance</span></div>
+              </div>
+              <div class="project-content">
+                <h3>Analyse des ventes E-commerce</h3>
+                <p>
+                  Pipeline d’analyse multi-tables, KPIs métier, segmentation clients,
+                  détection d’anomalies et dashboard Power BI automatisé.
+                </p>
+                <div class="tech-list"><span>Python</span><span>Pandas</span><span>SQL</span><span>FastAPI</span><span>Power BI</span></div>
+                <div class="project-links">
+                  <a href="https://github.com/Raoufbensaid" target="_blank" rel="noreferrer">GitHub ↗</a>
+                  <button class="case-btn" data-open-project="sales">Voir le case study →</button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="project-note reveal">
+            <span>+</span>
+            <p>Projet professionnel : application multiplateforme, tracking GPS, APIs et données terrain chez Flying For You.</p>
+          </div>
+        </section>
+
+        <section class="section skills" id="skills" aria-labelledby="skills-title">
+          <div class="section-heading reveal">
+            <span class="section-number">03</span>
+            <div>
+              <p class="section-kicker">STACK</p>
+              <h2 id="skills-title">Des outils pour<br /><span class="muted">construire de A à Z.</span></h2>
+            </div>
+          </div>
+
+          <div class="skills-layout">
+            <div class="skills-orb-wrap reveal">
+              <div class="skills-orb" aria-hidden="true">
+                <div class="orb-core">DEV<br /><span>×</span><br />DATA</div>
+                <span class="orb-tag tag-js">JS</span><span class="orb-tag tag-py">PY</span>
+                <span class="orb-tag tag-react">REACT</span><span class="orb-tag tag-sql">SQL</span>
+                <span class="orb-tag tag-node">NODE</span>
+              </div>
+            </div>
+
+            <div class="skill-groups">
+              <div class="skill-group reveal">
+                <div class="skill-group-head"><h3>Data & Analyse</h3><span>01</span></div>
+                <div class="skill-row"><span>Python · Pandas · NumPy</span><div class="skill-bar"><i style="--level:88%"></i></div></div>
+                <div class="skill-row"><span>SQL · PostgreSQL · MongoDB</span><div class="skill-bar"><i style="--level:84%"></i></div></div>
+                <div class="skill-row"><span>Power BI · Tableau · Excel</span><div class="skill-bar"><i style="--level:78%"></i></div></div>
+              </div>
+
+              <div class="skill-group reveal">
+                <div class="skill-group-head"><h3>Web & Mobile</h3><span>02</span></div>
+                <div class="skill-row"><span>React · Next.js · Angular</span><div class="skill-bar"><i style="--level:90%"></i></div></div>
+                <div class="skill-row"><span>TypeScript · JavaScript</span><div class="skill-bar"><i style="--level:91%"></i></div></div>
+                <div class="skill-row"><span>Node.js · Express · FastAPI</span><div class="skill-bar"><i style="--level:87%"></i></div></div>
+              </div>
+
+              <div class="skill-group reveal">
+                <div class="skill-group-head"><h3>DevOps & temps réel</h3><span>03</span></div>
+                <div class="skill-row"><span>Docker · Git · GitHub · Railway</span><div class="skill-bar"><i style="--level:75%"></i></div></div>
+                <div class="skill-row"><span>WebSocket · Socket.io · EAS</span><div class="skill-bar"><i style="--level:82%"></i></div></div>
+              </div>
+
+              <div class="skill-group reveal targeted-stack">
+                <div class="skill-group-head"><h3>Écosystème SI & APIs</h3><span>04</span></div>
+                <p class="targeted-stack-note">Technologies repérées dans l’environnement de recrutement de la Fondation Santé Service.</p>
+                <div class="badge-cloud compact-badges" aria-label="Technologies de l'environnement Santé Service">
+                  <span>C#</span><span>.NET</span><span>ASP.NET</span><span>VB.NET</span>
+                  <span>WinForms</span><span>SQL Server</span><span>T-SQL</span><span>JavaScript</span>
+                  <span>Git</span><span>Visual Studio</span><span>REST</span><span>SOAP</span><span>GraphQL</span><span>Python</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section experience" id="experience" aria-labelledby="experience-title">
+          <div class="section-heading reveal">
+            <span class="section-number">04</span>
+            <div>
+              <p class="section-kicker">PARCOURS</p>
+              <h2 id="experience-title">Expérience &<br /><span class="muted">formation.</span></h2>
+            </div>
+          </div>
+
+          <div class="split-timeline">
+            <div class="timeline-column timeline-education">
+              <div class="column-label reveal"><span>FORMATION</span><i>Éducation</i></div>
+
+              <article class="split-card reveal">
+                <span class="split-date">2024 — 2026</span>
+                <span class="eyebrow-mini">BAC+5</span>
+                <h3>Mastère Expert IT — Développement & Big Data</h3>
+                <p>IRIS École supérieure d’informatique · Paris 17e</p>
+                <div class="card-line"></div>
+                <small>Formation en alternance, orientée développement, bases de données et Big Data.</small>
+              </article>
+
+              <article class="split-card reveal">
+                <span class="split-date">2023 — 2024</span>
+                <span class="eyebrow-mini">BAC+3</span>
+                <h3>Concepteur de solutions digitales</h3>
+                <p>IRIS École supérieure d’informatique · Paris 17e</p>
+              </article>
+
+              <article class="split-card reveal">
+                <span class="split-date">2021 — 2023</span>
+                <span class="eyebrow-mini">DUT</span>
+                <h3>Informatique</h3>
+                <p>IUT de Villetaneuse · Paris 13</p>
+              </article>
+            </div>
+
+            <div class="timeline-center" aria-hidden="true">
+              <span class="center-line"></span>
+              <span class="center-dot dot-1"></span>
+              <span class="center-dot dot-2"></span>
+              <span class="center-dot dot-3"></span>
+              <span class="center-dot dot-4"></span>
+              <span class="center-dot dot-5"></span>
+            </div>
+
+            <div class="timeline-column timeline-work">
+              <div class="column-label reveal"><span>EXPÉRIENCE</span><i>Professionnel</i></div>
+
+              <article class="split-card reveal">
+                <span class="split-date">2024 — 2026</span>
+                <span class="eyebrow-mini">ALTERNANCE</span>
+                <h3>Développeur Full Stack & Data</h3>
+                <p>Flying For You · Puteaux (75)</p>
+                <div class="card-line"></div>
+                <ul>
+                  <li>Application multiplateforme iOS, Android et desktop.</li>
+                  <li>Tracking GPS et collecte de données terrain.</li>
+                  <li>API back-end et données MongoDB.</li>
+                  <li>Méthodologie Agile, suivi et documentation.</li>
+                </ul>
+              </article>
+
+              <article class="split-card reveal">
+                <span class="split-date">Avr. — Août 2023</span>
+                <span class="eyebrow-mini">STAGE</span>
+                <h3>Développeur Full Stack</h3>
+                <p>SNCF DGA numérique e.SNCF · Saint-Denis (93)</p>
+                <div class="card-line"></div>
+                <ul>
+                  <li>Frontend Angular / TypeScript avec architecture réactive.</li>
+                  <li>Intégration avec un backend PHP.</li>
+                  <li>Base PostgreSQL et hébergement Apache.</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section contact" id="contact" aria-labelledby="contact-title">
+          <div class="contact-glow" aria-hidden="true"></div>
+          <div class="contact-inner">
+            <div class="section-heading reveal">
+              <span class="section-number">05</span>
+              <div>
+                <p class="section-kicker">CONTACT</p>
+                <h2 id="contact-title">Construisons quelque<br /><span class="gradient-text">chose d’utile.</span></h2>
+              </div>
+            </div>
+
+            <div class="contact-grid">
+              <div class="contact-copy reveal">
+                <p class="lead">Vous cherchez un profil capable de passer de l’interface à la donnée ? Parlons de votre prochain produit.</p>
+                <div class="contact-links">
+                  <a href="mailto:bensaidabderraouf1@gmail.com" class="contact-link"><span class="contact-icon">@</span><span><small>EMAIL</small>bensaidabderraouf1@gmail.com</span><b>↗</b></a>
+                  <a href="https://github.com/Raoufbensaid" target="_blank" rel="noreferrer" class="contact-link"><span class="contact-icon">GH</span><span><small>GITHUB</small>github.com/Raoufbensaid</span><b>↗</b></a>
+                  <a href="https://www.linkedin.com/in/raouf-bensaid/" target="_blank" rel="noreferrer" class="contact-link"><span class="contact-icon">in</span><span><small>LINKEDIN</small>linkedin.com/in/raouf-bensaid/</span><b>↗</b></a>
+                </div>
+              </div>
+
+              <form class="contact-form reveal" id="contact-form">
+                <label>Votre nom<input name="name" type="text" autocomplete="name" placeholder="Jean Dupont" required /></label>
+                <label>Votre email<input name="email" type="email" autocomplete="email" placeholder="jean@entreprise.fr" required /></label>
+                <label>Votre message<textarea name="message" rows="5" placeholder="Parlez-moi de votre projet..." required></textarea></label>
+                <button class="btn btn-primary submit-btn" type="submit">Préparer l’email <span>↗</span></button>
+                <p class="form-note">Le formulaire ouvre votre client mail — aucun serveur n’est requis.</p>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div>RAOUF<span class="accent">.</span>BSD</div>
+        <div>FULL STACK × DATA</div>
+        <a href="#top">RETOUR EN HAUT ↑</a>
+      </footer>
+
+      <div class="modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+        <div class="modal-backdrop" data-close-modal></div>
+        <div class="modal-panel">
+          <button class="modal-close" data-close-modal aria-label="Fermer">×</button>
+          <span class="eyebrow-mini" id="modal-kicker"></span>
+          <h2 id="modal-title"></h2>
+          <p id="modal-description"></p>
+          <div class="modal-columns">
+            <div><small>ARCHITECTURE</small><ul id="modal-architecture"></ul></div>
+            <div><small>TECHNOLOGIES</small><div id="modal-tech" class="tech-list"></div></div>
+          </div>
+          <a id="modal-github" class="btn btn-primary" target="_blank" rel="noreferrer">Voir GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
