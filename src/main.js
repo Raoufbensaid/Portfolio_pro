@@ -1,345 +1,158 @@
-import * as THREE from "three";
-import { gsap } from "gsap";
+// Hero 3D scene (Three.js). Fails silently to the static hero if WebGL is unavailable.
+import * as THREE from 'three';
 
-import "./style.css";
+const canvas = document.getElementById('hero-3d');
+const hero = document.querySelector('.hero');
+const portrait = document.querySelector('.portrait');
+const motionMq = matchMedia('(prefers-reduced-motion: reduce)');
+let noMotion = motionMq.matches;
 
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+} catch (e) { canvas.remove(); }
 
-// ---------- Header / navigation ----------
-const header = document.querySelector(".site-header");
-const menuToggle = document.querySelector(".menu-toggle");
+if (renderer) {
+  renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
-menuToggle?.addEventListener("click", () => {
-  const open = header.classList.toggle("nav-open");
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
-});
-
-document.querySelectorAll(".desktop-nav a").forEach((link) => {
-  link.addEventListener("click", () => {
-    header.classList.remove("nav-open");
-    menuToggle?.setAttribute("aria-expanded", "false");
-  });
-});
-
-// ---------- Cursor glow ----------
-const cursorGlow = document.querySelector(".cursor-glow");
-if (cursorGlow && !reduceMotion) {
-  window.addEventListener("pointermove", (event) => {
-    gsap.to(cursorGlow, {
-      x: event.clientX,
-      y: event.clientY,
-      duration: 0.45,
-      ease: "power3.out",
-      overwrite: true
-    });
-  });
-}
-
-// ---------- Three.js hero scene ----------
-const canvas = document.querySelector("#hero-canvas");
-
-if (canvas && !reduceMotion) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.set(0, 0, 9);
 
-  const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-    alpha: true,
-    powerPreference: "high-performance"
-  });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
+  // Core: wireframe icosahedron + glowing vertices + faint inner solid
+  const anchor = new THREE.Group();
   const group = new THREE.Group();
-  group.position.set(2.4, 0.2, 0);
-  scene.add(group);
+  anchor.add(group);
+  scene.add(anchor);
 
-  const wireGeometry = new THREE.IcosahedronGeometry(2.05, 2);
-  const wireMaterial = new THREE.MeshBasicMaterial({
-    color: 0x638cff,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.22
+  const coreGeo = new THREE.IcosahedronGeometry(1.7, 1);
+  const coreMat = new THREE.MeshBasicMaterial({ wireframe: true, transparent: true, opacity: 0.5 });
+  const core = new THREE.Mesh(coreGeo, coreMat);
+  const vertsMat = new THREE.PointsMaterial({ size: 0.09, transparent: true, opacity: 0.95 });
+  const verts = new THREE.Points(coreGeo, vertsMat);
+  const innerMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.1 });
+  const inner = new THREE.Mesh(new THREE.IcosahedronGeometry(1.1, 0), innerMat);
+  group.add(core, verts, inner);
+
+  // Orbits with satellites
+  const ringMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.6 });
+  const satMat = new THREE.MeshBasicMaterial();
+  const satGeo = new THREE.SphereGeometry(0.08, 12, 12);
+  const orbits = [
+    { r: 2.7, tilt: [1.25, 0.35, 0], speed: 0.55 },
+    { r: 3.25, tilt: [-0.5, 0.95, 0.2], speed: -0.38 },
+    { r: 3.8, tilt: [0.2, -0.6, 0.9], speed: 0.24 }
+  ].map((o, i) => {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(o.r, 0.01, 8, 160), ringMat);
+    ring.rotation.set(...o.tilt);
+    const sat = new THREE.Mesh(satGeo, satMat);
+    ring.add(sat);
+    group.add(ring);
+    return { ...o, ring, sat, phase: i * 2.1 };
   });
-  const wire = new THREE.Mesh(wireGeometry, wireMaterial);
-  group.add(wire);
 
-  const coreGeometry = new THREE.IcosahedronGeometry(1.55, 3);
-  const coreMaterial = new THREE.MeshBasicMaterial({
-    color: 0x8d68ff,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.18
-  });
-  const core = new THREE.Mesh(coreGeometry, coreMaterial);
-  group.add(core);
-
-  const particleCount = 800;
-  const positions = new Float32Array(particleCount * 3);
-  const sizes = new Float32Array(particleCount);
-
-  for (let i = 0; i < particleCount; i++) {
-    const radius = 3.1 + Math.random() * 2.7;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[i * 3 + 1] = radius * Math.cos(phi);
-    positions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
-    sizes[i] = Math.random() * 1.5 + 0.5;
+  // Ambient particle field
+  const N = innerWidth < 768 ? 320 : 760;
+  const pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    const r = 5 + Math.random() * 11;
+    const th = Math.random() * Math.PI * 2;
+    const ph = Math.acos(2 * Math.random() - 1);
+    pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
+    pos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th) * 0.65;
+    pos[i * 3 + 2] = r * Math.cos(ph) - 5;
   }
+  const fieldGeo = new THREE.BufferGeometry();
+  fieldGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const fieldMat = new THREE.PointsMaterial({ size: 0.04, transparent: true, opacity: 0.55 });
+  const field = new THREE.Points(fieldGeo, fieldMat);
+  scene.add(field);
 
-  const particleGeometry = new THREE.BufferGeometry();
-  particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  particleGeometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+  // Theme-aware colors from CSS tokens
+  const applyColors = () => {
+    const cs = getComputedStyle(document.documentElement);
+    const accent = cs.getPropertyValue('--accent').trim();
+    const strong = cs.getPropertyValue('--accent-strong').trim();
+    const subtle = cs.getPropertyValue('--fg-subtle').trim();
+    coreMat.color.set(accent);
+    vertsMat.color.set(strong);
+    innerMat.color.set(accent);
+    ringMat.color.set(accent);
+    satMat.color.set(strong);
+    fieldMat.color.set(subtle);
+    if (noMotion) render();
+  };
+  new MutationObserver(applyColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-  const particleMaterial = new THREE.PointsMaterial({
-    color: 0x789aff,
-    size: 0.025,
-    transparent: true,
-    opacity: 0.58,
-    sizeAttenuation: true
-  });
-
-  const particles = new THREE.Points(particleGeometry, particleMaterial);
-  group.add(particles);
-
-  const resize = () => {
-    const width = canvas.clientWidth || window.innerWidth;
-    const height = canvas.clientHeight || window.innerHeight;
-    renderer.setSize(width, height, false);
-    camera.aspect = width / height;
+  // Place the sculpture behind the portrait, sized to it
+  const layout = () => {
+    const w = hero.clientWidth, h = hero.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
-
-    // Keep the 3D object away from the copy on smaller screens.
-    group.position.x = width < 900 ? 2.3 : 2.7;
-    group.scale.setScalar(width < 600 ? 0.78 : width < 900 ? 0.88 : 1);
+    const visH = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const visW = visH * camera.aspect;
+    const hr = hero.getBoundingClientRect();
+    const pr = portrait.getBoundingClientRect();
+    const cx = pr.left + pr.width / 2 - hr.left;
+    const cy = pr.top + pr.height / 2 - hr.top;
+    anchor.position.set((cx / w - 0.5) * visW, -(cy / h - 0.5) * visH, 0);
+    const s = ((pr.width / w) * visW) / 4.3;
+    anchor.scale.setScalar(s);
+    if (noMotion) render();
   };
 
-  const pointer = { x: 0, y: 0 };
-  window.addEventListener("pointermove", (event) => {
-    pointer.x = (event.clientX / window.innerWidth - 0.5) * 2;
-    pointer.y = (event.clientY / window.innerHeight - 0.5) * 2;
-  });
+  // Pointer parallax + scroll
+  const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+  addEventListener('pointermove', (e) => {
+    mouse.tx = e.clientX / innerWidth - 0.5;
+    mouse.ty = e.clientY / innerHeight - 0.5;
+  }, { passive: true });
 
-  window.addEventListener("resize", resize);
-  resize();
-
+  const render = () => renderer.render(scene, camera);
   const clock = new THREE.Clock();
+  let running = true, rafId = 0, t = 0;
 
-  const render = () => {
-    const t = clock.getElapsedTime();
-    wire.rotation.x = t * 0.08;
-    wire.rotation.y = t * 0.13;
-    core.rotation.x = -t * 0.1;
-    core.rotation.y = -t * 0.17;
-    particles.rotation.y = t * 0.018;
-    particles.rotation.x = Math.sin(t * 0.15) * 0.06;
-
-    group.rotation.y += (pointer.x * 0.11 - group.rotation.y) * 0.025;
-    group.rotation.x += (-pointer.y * 0.08 - group.rotation.x) * 0.025;
-    group.position.y = 0.2 + Math.sin(t * 0.65) * 0.08;
-
-    renderer.render(scene, camera);
-    requestAnimationFrame(render);
+  const tick = () => {
+    rafId = requestAnimationFrame(tick);
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if (!noMotion) {
+      t += dt;
+      mouse.x += (mouse.tx - mouse.x) * 0.05;
+      mouse.y += (mouse.ty - mouse.y) * 0.05;
+      const scroll = Math.min(1, scrollY / hero.clientHeight);
+      group.rotation.y = t * 0.18 + mouse.x * 0.8;
+      group.rotation.x = Math.sin(t * 0.3) * 0.15 + mouse.y * 0.5 + scroll * 1.2;
+      core.rotation.z = t * 0.1;
+      inner.rotation.set(-t * 0.25, t * 0.3, 0);
+      const pulse = 1 + Math.sin(t * 1.6) * 0.04;
+      inner.scale.setScalar(pulse);
+      orbits.forEach((o) => {
+        const a = o.phase + t * o.speed;
+        o.sat.position.set(Math.cos(a) * o.r, Math.sin(a) * o.r, 0);
+      });
+      field.rotation.y = t * 0.02 + mouse.x * 0.15;
+      field.rotation.x = mouse.y * 0.1;
+      anchor.position.z = -scroll * 3;
+    }
+    render();
   };
 
+  const start = () => { if (!rafId && running && !noMotion && !document.hidden) { clock.getDelta(); tick(); } };
+  const stop = () => { cancelAnimationFrame(rafId); rafId = 0; };
+
+  motionMq.addEventListener('change', (e) => { noMotion = e.matches; if (noMotion) { stop(); render(); } else start(); });
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  new IntersectionObserver(([en]) => { running = en.isIntersecting; running ? start() : stop(); }).observe(hero);
+  let resizeT;
+  addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(layout, 120); });
+
+  // Wait for the portrait reveal so its final position is measured
+  applyColors();
+  layout();
+  setTimeout(layout, 800);
   render();
+  start();
+  requestAnimationFrame(() => canvas.classList.add('ready'));
 }
-
-// ---------- Scroll reveal ----------
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.12 }
-);
-
-document.querySelectorAll(".reveal").forEach((el, index) => {
-  if (reduceMotion) el.classList.add("is-visible");
-  else {
-    el.style.transitionDelay = `${Math.min(index * 35, 280)}ms`;
-    revealObserver.observe(el);
-  }
-});
-
-// ---------- Skill bar animation ----------
-const skillBars = document.querySelectorAll(".skill-bar i");
-const skillObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.transform = "scaleX(1)";
-        skillObserver.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.7 }
-);
-skillBars.forEach((bar) => skillObserver.observe(bar));
-
-// ---------- 3D tilt cards ----------
-if (!reduceMotion) {
-  document.querySelectorAll(".tilt-card").forEach((card) => {
-    card.addEventListener("pointermove", (event) => {
-      const rect = card.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      const rotateY = ((x / rect.width) - 0.5) * 7;
-      const rotateX = ((y / rect.height) - 0.5) * -7;
-
-      gsap.to(card, {
-        rotateX,
-        rotateY,
-        transformPerspective: 900,
-        duration: 0.35,
-        ease: "power2.out",
-        overwrite: true
-      });
-    });
-
-    card.addEventListener("pointerleave", () => {
-      gsap.to(card, {
-        rotateX: 0,
-        rotateY: 0,
-        duration: 0.65,
-        ease: "elastic.out(1, .55)"
-      });
-    });
-  });
-}
-
-// ---------- Hero entrance ----------
-if (!reduceMotion) {
-  gsap.from(".hero-title", {
-    y: 45,
-    opacity: 0,
-    duration: 1.05,
-    delay: 0.15,
-    ease: "power4.out"
-  });
-  gsap.from(".hero .eyebrow", {
-    y: 15,
-    opacity: 0,
-    duration: 0.65,
-    delay: 0.05,
-    ease: "power3.out"
-  });
-}
-
-// ---------- Project modal ----------
-const projectData = {
-  deliverconnect: {
-    kicker: "FULL STACK · MOBILE · DATA",
-    title: "DeliverConnect",
-    description:
-      "Marketplace de livraison collaborative conçu comme une expérience de bout en bout : publication, matching, tracking GPS, communication, paiement et pilotage.",
-    architecture: [
-      "API REST Node.js / Express + MongoDB / Mongoose",
-      "Authentification JWT + Stripe Connect",
-      "Tracking GPS temps réel via Socket.io + Leaflet / OpenStreetMap",
-      "Chat WebSocket + notifications SMS Vonage",
-      "Dashboard React / Vite / Recharts + backend Railway"
-    ],
-    tech: ["React Native", "Expo", "Node.js", "Express", "MongoDB", "Socket.io", "Stripe", "Leaflet", "Vonage"],
-    github: "https://github.com/Raoufbensaid"
-  },
-  sales: {
-    kicker: "DATA ANALYTICS",
-    title: "Analyse des ventes E-commerce",
-    description:
-      "Projet data orienté décision : nettoyage multi-tables, modélisation SQL, segmentation, KPIs, prévision simple et exposition automatisée des indicateurs dans un dashboard.",
-    architecture: [
-      "Collecte et nettoyage via Python, Pandas et NumPy",
-      "Modélisation relationnelle SQL + requêtes analytiques",
-      "Segmentation client, panier moyen, retours et promotions",
-      "API FastAPI exposant les KPIs et alertes anomalies",
-      "Dashboard Power BI avec filtres période, catégorie et région"
-    ],
-    tech: ["Python", "Pandas", "NumPy", "SQL", "PostgreSQL", "FastAPI", "Power BI"],
-    github: "https://github.com/Raoufbensaid"
-  }
-};
-
-const modal = document.querySelector("#project-modal");
-const modalTitle = document.querySelector("#modal-title");
-const modalKicker = document.querySelector("#modal-kicker");
-const modalDescription = document.querySelector("#modal-description");
-const modalArchitecture = document.querySelector("#modal-architecture");
-const modalTech = document.querySelector("#modal-tech");
-const modalGithub = document.querySelector("#modal-github");
-
-function openProject(key) {
-  const project = projectData[key];
-  if (!project || !modal) return;
-
-  modalKicker.textContent = project.kicker;
-  modalTitle.textContent = project.title;
-  modalDescription.textContent = project.description;
-  modalArchitecture.innerHTML = project.architecture.map((item) => `<li>${item}</li>`).join("");
-  modalTech.innerHTML = project.tech.map((item) => `<span>${item}</span>`).join("");
-  modalGithub.href = project.github;
-
-  modal.hidden = false;
-  document.body.classList.add("modal-open");
-  requestAnimationFrame(() => modal.classList.add("is-open"));
-}
-
-function closeProject() {
-  if (!modal) return;
-  modal.classList.remove("is-open");
-  modal.hidden = true;
-  document.body.classList.remove("modal-open");
-}
-
-document.querySelectorAll("[data-open-project]").forEach((button) => {
-  button.addEventListener("click", () => openProject(button.dataset.openProject));
-});
-document.querySelectorAll("[data-close-modal]").forEach((element) => {
-  element.addEventListener("click", closeProject);
-});
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !modal?.hidden) closeProject();
-});
-
-// ---------- Contact form ----------
-const form = document.querySelector("#contact-form");
-form?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(form);
-  const name = String(data.get("name") || "").trim();
-  const email = String(data.get("email") || "").trim();
-  const message = String(data.get("message") || "").trim();
-
-  const subject = encodeURIComponent(`Opportunité — ${name}`);
-  const body = encodeURIComponent(
-    `Bonjour Raouf,\n\n${message}\n\nMon email : ${email}\n\nBien cordialement,\n${name}`
-  );
-
-  window.location.href = `mailto:bensaidabderraouf1@gmail.com?subject=${subject}&body=${body}`;
-});
-
-// ---------- Small accessibility / active-section behavior ----------
-const navLinks = [...document.querySelectorAll(".desktop-nav a")];
-const sections = [...document.querySelectorAll("main section[id]")];
-
-const activeObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      navLinks.forEach((link) => {
-        link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`);
-      });
-    });
-  },
-  { rootMargin: "-40% 0px -55% 0px" }
-);
-
-sections.forEach((section) => activeObserver.observe(section));
