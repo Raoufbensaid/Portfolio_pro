@@ -5,24 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Raouf.dev — Abderraouf Bensaid, Développeur Full Stack & Data</title>
   <meta name="description" content="Portfolio d'Abderraouf Bensaid, développeur Full Stack & Data basé à Paris, ouvert à de nouvelles opportunités. React, Node.js, Python, MongoDB, Power BI." />
-  <meta name="theme-color" content="#0B0B10" />
+  <meta name="theme-color" content="#0C0706" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0B0B10;
-      --bg-elev: #121218;
-      --card: #16161D;
-      --card-hover: #1C1C25;
-      --border: #24242E;
-      --border-strong: #33333F;
-      --fg: #F8FAFC;
-      --fg-muted: #A1A9B8;
-      --fg-subtle: #7C8494;
-      --accent: #3B82F6;
-      --accent-strong: #60A5FA;
-      --accent-soft: rgba(59, 130, 246, 0.12);
+      --bg: #0C0706;
+      --bg-elev: #140C0A;
+      --card: rgba(26, 14, 12, 0.88);
+      --card-hover: rgba(36, 18, 15, 0.92);
+      --border: #2E1A16;
+      --border-strong: #46251F;
+      --fg: #FBF5F3;
+      --fg-muted: #C4AFAA;
+      --fg-subtle: #9A817B;
+      --accent: #DC2626;
+      --accent-strong: #F87171;
+      --accent-soft: rgba(239, 68, 68, 0.14);
+      --lava: #FB923C;
       --on-accent: #FFFFFF;
       --success: #34D399;
       --radius-sm: 8px;
@@ -38,31 +39,12 @@
       --nav-h: 68px;
       color-scheme: dark;
     }
-    @media (prefers-color-scheme: light) {
-      :root:not([data-theme="dark"]) {
-        --bg: #F8FAFC; --bg-elev: #FFFFFF; --card: #FFFFFF; --card-hover: #F1F5F9;
-        --border: #E2E8F0; --border-strong: #CBD5E1;
-        --fg: #0F172A; --fg-muted: #475569; --fg-subtle: #64748B;
-        --accent: #2563EB; --accent-strong: #1D4ED8; --accent-soft: rgba(37, 99, 235, 0.08);
-        --success: #059669;
-        --shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.25);
-        color-scheme: light;
-      }
-    }
-    :root[data-theme="light"] {
-      --bg: #F8FAFC; --bg-elev: #FFFFFF; --card: #FFFFFF; --card-hover: #F1F5F9;
-      --border: #E2E8F0; --border-strong: #CBD5E1;
-      --fg: #0F172A; --fg-muted: #475569; --fg-subtle: #64748B;
-      --accent: #2563EB; --accent-strong: #1D4ED8; --accent-soft: rgba(37, 99, 235, 0.08);
-      --success: #059669;
-      --shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.25);
-      color-scheme: light;
-    }
 
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
     body {
-      margin: 0; background: var(--bg); color: var(--fg);
+      margin: 0; color: var(--fg);
+      background: radial-gradient(ellipse 90% 60% at 50% 100%, #3B0D07 0%, #1A0806 45%, var(--bg) 75%) fixed, var(--bg);
       font-family: var(--font-sans); font-size: 16px; line-height: 1.6;
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
@@ -121,9 +103,6 @@
     }
     .icon-btn:hover { color: var(--fg); border-color: var(--border-strong); background: var(--card); }
     .menu-btn { display: none; }
-    .theme-btn .sun { display: none; }
-    :root[data-theme="light"] .theme-btn .sun { display: block; }
-    :root[data-theme="light"] .theme-btn .moon { display: none; }
 
     @media (max-width: 860px) {
       .menu-btn { display: grid; }
@@ -146,32 +125,27 @@
     }
     .btn:active { transform: scale(0.97); }
     .btn-primary { background: var(--accent); color: var(--on-accent); }
-    .btn-primary:hover { background: var(--accent-strong); }
-    :root[data-theme="light"] .btn-primary:hover { background: var(--accent-strong); }
+    .btn-primary { box-shadow: 0 8px 30px -10px rgba(239, 68, 68, 0.7); }
+    .btn-primary:hover { background: #EF4444; }
     .btn-ghost { border-color: var(--border-strong); color: var(--fg); background: transparent; }
     .btn-ghost:hover { background: var(--card); border-color: var(--fg-subtle); }
 
     /* ---------- Hero ---------- */
-    .hero { position: relative; padding: calc(var(--nav-h) + 72px) 0 88px; overflow: hidden; }
-    .hero-bg {
-      position: absolute; inset: 0; z-index: -1; pointer-events: none;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 56px 56px;
-      mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
-      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 30%, transparent 75%);
-      opacity: 0.55;
+    /* Volcano background: fixed WebGL canvas + a veil that darkens it as you scroll */
+    .scene-3d {
+      position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;
+      opacity: 0; transition: opacity 1500ms var(--ease-out);
     }
-    .hero-glow {
-      position: absolute; z-index: -1; width: 640px; height: 640px; right: -160px; top: -120px; pointer-events: none;
-      background: radial-gradient(circle, var(--accent-soft) 0%, transparent 65%);
+    .scene-3d.ready { opacity: 1; }
+    .veil { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--bg); opacity: var(--veil, 0.05); }
+
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; display: flex; align-items: center; padding: calc(var(--nav-h) + 48px) 0 88px; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(12, 7, 6, 0.92) 0%, rgba(12, 7, 6, 0.6) 38%, transparent 62%),
+        linear-gradient(0deg, var(--bg) 0%, transparent 22%);
     }
-    .hero-3d {
-      position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
-      opacity: 0; transition: opacity 1200ms var(--ease-out);
-    }
-    .hero-3d.ready { opacity: 1; }
     .hero-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 56px; align-items: center; }
     .status {
       display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 10px;
@@ -186,7 +160,7 @@
     @keyframes pulse { from { transform: scale(0.6); opacity: 0.8; } to { transform: scale(1.6); opacity: 0; } }
     .hero h1 { font-size: clamp(40px, 6.4vw, 72px); font-weight: 800; letter-spacing: -0.035em; }
     .hero h1 .accent {
-      background: linear-gradient(110deg, var(--accent-strong), var(--accent) 60%);
+      background: linear-gradient(110deg, #FDBA74, var(--lava) 30%, var(--accent-strong) 55%, var(--accent));
       -webkit-background-clip: text; background-clip: text; color: transparent;
     }
     .hero-role { margin-top: 20px; font-family: var(--font-mono); font-size: clamp(15px, 1.8vw, 18px); color: var(--fg); min-height: 1.6em; }
@@ -217,6 +191,9 @@
 
     @media (max-width: 900px) {
       .hero { padding-top: calc(var(--nav-h) + 40px); padding-bottom: 64px; }
+      .hero::before {
+        background: linear-gradient(0deg, var(--bg) 0%, rgba(12, 7, 6, 0.82) 45%, rgba(12, 7, 6, 0.35) 75%, transparent 100%);
+      }
       .hero-grid { grid-template-columns: 1fr; gap: 48px; }
       .portrait { order: -1; width: min(72%, 280px); }
       .portrait-tag { left: auto; right: -16px; bottom: -16px; }
@@ -473,7 +450,7 @@
       .reveal { opacity: 1; translate: none; rotate: none; }
       [data-tilt] { transform: none; }
       .project-visual .window { transform: rotateX(8deg) rotateY(-14deg); }
-      .hero-3d { transition: none; }
+      .scene-3d { transition: none; }
       .caret { display: none; }
     }
   </style>
@@ -481,6 +458,8 @@
 <body class="no-js">
   <a class="skip-link" href="#main">Aller au contenu</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
+  <canvas class="scene-3d" id="scene-3d" aria-hidden="true"></canvas>
+  <div class="veil" id="veil" aria-hidden="true"></div>
 
   <!-- SVG icon sprite (Lucide, stroke 1.75) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -532,10 +511,6 @@
         </ul>
       </nav>
       <div class="nav-actions">
-        <button class="icon-btn theme-btn" id="theme-btn" type="button" aria-label="Changer de thème">
-          <svg class="moon" width="18" height="18" aria-hidden="true"><use href="#i-moon"/></svg>
-          <svg class="sun" width="18" height="18" aria-hidden="true"><use href="#i-sun"/></svg>
-        </button>
         <a class="icon-btn" href="https://github.com/Raoufbensaid" target="_blank" rel="noopener" aria-label="GitHub (nouvel onglet)">
           <svg width="18" height="18" aria-hidden="true"><use href="#i-github"/></svg>
         </a>
@@ -549,9 +524,6 @@
   <main id="main">
     <!-- HERO -->
     <section class="hero" id="top">
-      <div class="hero-bg" aria-hidden="true"></div>
-      <div class="hero-glow" aria-hidden="true"></div>
-      <canvas class="hero-3d" id="hero-3d" aria-hidden="true"></canvas>
       <div class="container hero-grid">
         <div>
           <div class="status"><span class="status-dot" aria-hidden="true"></span>Ouvert à de nouvelles opportunités · Paris</div>
@@ -906,14 +878,6 @@
       var root = document.documentElement;
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // Theme
-      try { var saved = localStorage.getItem('theme'); if (saved) root.dataset.theme = saved; } catch (e) {}
-      if (!root.dataset.theme) root.dataset.theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-      document.getElementById('theme-btn').addEventListener('click', function () {
-        root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
-        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-      });
-
       // Nav background on scroll
       var nav = document.getElementById('nav');
       var onScroll = function () { nav.classList.toggle('scrolled', window.scrollY > 8); };
@@ -985,6 +949,8 @@
       var updateProgress = function () {
         var max = document.documentElement.scrollHeight - innerHeight;
         bar.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, scrollY / max) : 0) + ')';
+        // Darken the volcano behind the content once past the hero
+        root.style.setProperty('--veil', (0.05 + Math.min(1, scrollY / (innerHeight * 0.8)) * 0.8).toFixed(3));
         ticking = false;
       };
       window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(updateProgress); } }, { passive: true });
